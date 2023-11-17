@@ -1,13 +1,10 @@
 package ru.quipy.controller
 
-import com.fasterxml.jackson.databind.BeanDescription
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
-import ru.quipy.api.*
+import org.springframework.web.bind.annotation.*
+import ru.quipy.api.ProjectAddUserEvent
+import ru.quipy.api.ProjectAggregate
+import ru.quipy.api.ProjectCreatedEvent
+import ru.quipy.api.StatusCreatedEvent
 import ru.quipy.core.EventSourcingService
 import ru.quipy.logic.*
 import java.util.*
@@ -25,9 +22,9 @@ class ProjectController(
 
     @PostMapping("/{projectId}/status")
     fun createStatus(
-            @PathVariable projectId: UUID,
-            @RequestParam color: StatusColor,
-            @RequestParam name: String
+        @PathVariable projectId: UUID,
+        @RequestParam color: StatusColor,
+        @RequestParam name: String
     ): StatusCreatedEvent {
         return projectEsService.update(projectId) { it.createStatus(name, color) }
     }
@@ -39,6 +36,6 @@ class ProjectController(
 
     @PostMapping("/{projectId}/participants")
     fun addUser(@PathVariable projectId: UUID, @RequestParam userId: UUID): ProjectAddUserEvent {
-        return projectEsService.update(projectId) { it.addUser(userId) }
+        return projectEsService.update(projectId) { it.addExecutor(userId) }
     }
 }

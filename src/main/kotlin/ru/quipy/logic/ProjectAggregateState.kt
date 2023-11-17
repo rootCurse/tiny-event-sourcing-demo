@@ -22,10 +22,6 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
         return projectStatus[statusId]
     }
 
-    fun getAllStatuses(): Map<UUID, StatusEntity> {
-        return projectStatus
-    }
-
     // State transition functions which is represented by the class member function
     @StateTransitionFunc
     fun projectCreatedApply(event: ProjectCreatedEvent) {
@@ -35,7 +31,8 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
 
     @StateTransitionFunc
     fun StatusCreatedApply(event: StatusCreatedEvent) {
-        projectStatus[event.statusId] = StatusEntity(event.statusId,event.statusColor, event.statusName, event.projectId)
+        projectStatus[event.statusId] =
+            StatusEntity(event.statusId, event.statusColor, event.statusName, event.projectId)
         updatedAt = createdAt
     }
 
@@ -65,10 +62,10 @@ class ProjectAggregateState : AggregateState<UUID, ProjectAggregate> {
 }
 
 data class StatusEntity(
-        val id: UUID = UUID.randomUUID(),
-        val color: StatusColor,
-        val statusName: String,
-        val projectId: UUID,
+    val id: UUID = UUID.randomUUID(),
+    val color: StatusColor,
+    val statusName: String,
+    val projectId: UUID,
 )
 
 enum class StatusColor {

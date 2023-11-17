@@ -3,40 +3,47 @@ package ru.quipy.logic
 import ru.quipy.api.*
 import java.util.*
 
-fun TaskAggregateState.create(taskName: String, description: String, statusId: UUID, projectId: UUID): TaskCreatedEvent {
+fun TaskAggregateState.create(
+    taskName: String,
+    description: String,
+    statusId: UUID,
+    projectId: UUID
+): TaskCreatedEvent {
     return TaskCreatedEvent(
-            taskId = this.getId(),
-            taskName = taskName,
-            description = description,
-            statusId = statusId,
-            projectId = projectId
+        taskId = this.getId(),
+        taskName = taskName,
+        description = description,
+        statusId = statusId,
+        projectId = projectId
     )
 }
 
 fun TaskAggregateState.update(taskName: String, description: String): TaskUpdatedEvent {
     return TaskUpdatedEvent(
-            taskName = taskName,
-            description = description,
+        taskName = taskName,
+        description = description,
     )
 }
 
-fun TaskAggregateState.addUser( userId: UUID): TaskAddUserEvent {
+fun TaskAggregateState.addExecutor(userId: UUID): TaskAddUserEvent {
+    if (userId == this.userId)
+        throw IllegalArgumentException("Users already is executor");
     return TaskAddUserEvent(
-            taskId = this.getId(),
-            userId = userId
+        taskId = this.getId(),
+        userId = userId
     )
 }
 
-fun TaskAggregateState.deleteUser( userId: UUID): TaskDeleteUserEvent {
+fun TaskAggregateState.deleteUser(userId: UUID): TaskDeleteUserEvent {
     return TaskDeleteUserEvent(
-            taskId = this.getId(),
-            userId = userId
+        taskId = this.getId(),
+        userId = userId
     )
 }
 
-fun TaskAggregateState.changeStatus( statusId: UUID): TaskChangeStatusEvent {
+fun TaskAggregateState.changeStatus(statusId: UUID): TaskChangeStatusEvent {
     return TaskChangeStatusEvent(
-            taskId = this.getId(),
-            statusId = statusId
+        taskId = this.getId(),
+        statusId = statusId
     )
 }
